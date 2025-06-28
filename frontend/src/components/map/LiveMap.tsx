@@ -44,7 +44,7 @@ export function LiveMap({ tripId }: LiveMapProps) {
       (err) => {
         console.error('Geolocation error:', err)
         console.log('Using demo location for testing purposes')
-        const demoPosition: [number, number] = [40.7128, -74.0060]
+        const demoPosition: [number, number] = [32.7767, -97.1298]
         setPosition(demoPosition)
         setError(null)
       },
