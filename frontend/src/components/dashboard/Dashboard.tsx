@@ -162,7 +162,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                   <div className="flex justify-between items-center">
                     <h3 className="text-lg font-medium">Active Trips</h3>
                     {user.role === 'staff' && (
-                      <Button className="transport-button-primary">
+                      <Button className="transport-button-primary" onClick={() => alert('Create New Trip functionality coming soon')}>
                         <MapPin className="h-4 w-4 mr-2" />
                         Create New Trip
                       </Button>
@@ -185,7 +185,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                         <div>Dallas, TX</div>
                         <div>Phoenix, AZ</div>
                         <div>
-                          <Button variant="outline" size="sm">View Details</Button>
+                          <Button variant="outline" size="sm" onClick={() => alert('View Trip Details functionality coming soon')}>View Details</Button>
                         </div>
                       </div>
                       <div className="grid grid-cols-6 gap-4 p-4 items-center">
@@ -195,7 +195,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                         <div>Houston, TX</div>
                         <div>Denver, CO</div>
                         <div>
-                          <Button variant="outline" size="sm">View Details</Button>
+                          <Button variant="outline" size="sm" onClick={() => alert('View Trip Details functionality coming soon')}>View Details</Button>
                         </div>
                       </div>
                       <div className="grid grid-cols-6 gap-4 p-4 items-center">
@@ -205,7 +205,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                         <div>Austin, TX</div>
                         <div>Seattle, WA</div>
                         <div>
-                          <Button variant="outline" size="sm">View Details</Button>
+                          <Button variant="outline" size="sm" onClick={() => alert('View Trip Details functionality coming soon')}>View Details</Button>
                         </div>
                       </div>
                     </div>
@@ -249,7 +249,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <h3 className="text-lg font-medium">Recent Messages</h3>
-                    <Button className="transport-button-primary">
+                    <Button className="transport-button-primary" onClick={() => alert('New Message functionality coming soon')}>
                       <MessageSquare className="h-4 w-4 mr-2" />
                       New Message
                     </Button>
@@ -265,7 +265,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="text-sm text-gray-500">From: Transport Staff</div>
-                        <Button variant="outline" size="sm">Reply</Button>
+                        <Button variant="outline" size="sm" onClick={() => alert('Reply functionality coming soon')}>Reply</Button>
                       </div>
                     </div>
                     <div className="border rounded-lg p-4 hover:bg-gray-50">
@@ -278,7 +278,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="text-sm text-gray-500">From: Family Member</div>
-                        <Button variant="outline" size="sm">Reply</Button>
+                        <Button variant="outline" size="sm" onClick={() => alert('Reply functionality coming soon')}>Reply</Button>
                       </div>
                     </div>
                     <div className="border rounded-lg p-4 hover:bg-gray-50">
@@ -291,7 +291,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="text-sm text-gray-500">From: Admin</div>
-                        <Button variant="outline" size="sm">Reply</Button>
+                        <Button variant="outline" size="sm" onClick={() => alert('Reply functionality coming soon')}>Reply</Button>
                       </div>
                     </div>
                   </div>
@@ -311,7 +311,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                   <div className="flex justify-between items-center">
                     <h3 className="text-lg font-medium">Trip Documents</h3>
                     {(user.role === 'staff' || user.role === 'admin') && (
-                      <Button className="transport-button-primary">
+                      <Button className="transport-button-primary" onClick={() => alert('Upload Document functionality coming soon')}>
                         <FileText className="h-4 w-4 mr-2" />
                         Upload Document
                       </Button>
@@ -332,9 +332,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                         <div className="font-mono text-sm">TRP-001</div>
                         <div className="text-sm text-gray-500">2 days ago</div>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">Download</Button>
+                          <Button variant="outline" size="sm" onClick={() => alert('Download Document functionality coming soon')}>Download</Button>
                           {(user.role === 'staff' || user.role === 'admin') && (
-                            <Button variant="outline" size="sm">Delete</Button>
+                            <Button variant="outline" size="sm" onClick={() => alert('Delete Document functionality coming soon')}>Delete</Button>
                           )}
                         </div>
                       </div>
@@ -344,9 +344,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                         <div className="font-mono text-sm">TRP-002</div>
                         <div className="text-sm text-gray-500">1 day ago</div>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">Download</Button>
+                          <Button variant="outline" size="sm" onClick={() => alert('Download Document functionality coming soon')}>Download</Button>
                           {(user.role === 'staff' || user.role === 'admin') && (
-                            <Button variant="outline" size="sm">Delete</Button>
+                            <Button variant="outline" size="sm" onClick={() => alert('Delete Document functionality coming soon')}>Delete</Button>
                           )}
                         </div>
                       </div>
@@ -356,9 +356,9 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                         <div className="font-mono text-sm">TRP-001</div>
                         <div className="text-sm text-gray-500">3 days ago</div>
                         <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">Download</Button>
+                          <Button variant="outline" size="sm" onClick={() => alert('Download Document functionality coming soon')}>Download</Button>
                           {(user.role === 'staff' || user.role === 'admin') && (
-                            <Button variant="outline" size="sm">Delete</Button>
+                            <Button variant="outline" size="sm" onClick={() => alert('Delete Document functionality coming soon')}>Delete</Button>
                           )}
                         </div>
                       </div>
@@ -380,7 +380,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                   <div className="flex justify-between items-center">
                     <h3 className="text-lg font-medium">Flight Status</h3>
                     {user.role === 'staff' && (
-                      <Button className="transport-button-primary">
+                      <Button className="transport-button-primary" onClick={() => alert('Add Flight Info functionality coming soon')}>
                         <Plane className="h-4 w-4 mr-2" />
                         Add Flight Info
                       </Button>
@@ -465,7 +465,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <h3 className="text-lg font-medium">System Users</h3>
-                        <Button className="transport-button-primary">
+                        <Button className="transport-button-primary" onClick={() => alert('Add User functionality coming soon')}>
                           <Users className="h-4 w-4 mr-2" />
                           Add User
                         </Button>
@@ -485,8 +485,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                             <div><Badge className="bg-blue-100 text-blue-800">Staff</Badge></div>
                             <div><Badge className="bg-green-100 text-green-800">Active</Badge></div>
                             <div className="flex space-x-2">
-                              <Button variant="outline" size="sm">Edit</Button>
-                              <Button variant="outline" size="sm">Disable</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Edit User functionality coming soon')}>Edit</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Disable User functionality coming soon')}>Disable</Button>
                             </div>
                           </div>
                           <div className="grid grid-cols-5 gap-4 p-4 items-center">
@@ -495,8 +495,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                             <div><Badge className="bg-green-100 text-green-800">Family</Badge></div>
                             <div><Badge className="bg-green-100 text-green-800">Active</Badge></div>
                             <div className="flex space-x-2">
-                              <Button variant="outline" size="sm">Edit</Button>
-                              <Button variant="outline" size="sm">Disable</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Edit User functionality coming soon')}>Edit</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Disable User functionality coming soon')}>Disable</Button>
                             </div>
                           </div>
                           <div className="grid grid-cols-5 gap-4 p-4 items-center">
@@ -505,8 +505,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                             <div><Badge className="bg-purple-100 text-purple-800">Provider</Badge></div>
                             <div><Badge className="bg-green-100 text-green-800">Active</Badge></div>
                             <div className="flex space-x-2">
-                              <Button variant="outline" size="sm">Edit</Button>
-                              <Button variant="outline" size="sm">Disable</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Edit User functionality coming soon')}>Edit</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Disable User functionality coming soon')}>Disable</Button>
                             </div>
                           </div>
                           <div className="grid grid-cols-5 gap-4 p-4 items-center">
@@ -515,7 +515,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                             <div><Badge className="bg-red-100 text-red-800">Admin</Badge></div>
                             <div><Badge className="bg-green-100 text-green-800">Active</Badge></div>
                             <div className="flex space-x-2">
-                              <Button variant="outline" size="sm">Edit</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Edit User functionality coming soon')}>Edit</Button>
                               <Button variant="outline" size="sm" disabled>Disable</Button>
                             </div>
                           </div>
@@ -636,15 +636,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                           <CardContent className="space-y-4">
                             <div className="flex justify-between items-center">
                               <span className="text-sm">Email notifications</span>
-                              <Button variant="outline" size="sm">Configure</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Configure functionality coming soon')}>Configure</Button>
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-sm">SMS alerts</span>
-                              <Button variant="outline" size="sm">Configure</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Configure functionality coming soon')}>Configure</Button>
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-sm">Push notifications</span>
-                              <Button variant="outline" size="sm">Configure</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Configure functionality coming soon')}>Configure</Button>
                             </div>
                           </CardContent>
                         </Card>
@@ -655,15 +655,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                           <CardContent className="space-y-4">
                             <div className="flex justify-between items-center">
                               <span className="text-sm">Password policy</span>
-                              <Button variant="outline" size="sm">Edit</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Edit User functionality coming soon')}>Edit</Button>
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-sm">Session timeout</span>
-                              <Button variant="outline" size="sm">Edit</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Edit User functionality coming soon')}>Edit</Button>
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-sm">Two-factor auth</span>
-                              <Button variant="outline" size="sm">Configure</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Configure functionality coming soon')}>Configure</Button>
                             </div>
                           </CardContent>
                         </Card>
@@ -693,15 +693,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                           <CardContent className="space-y-4">
                             <div className="flex justify-between items-center">
                               <span className="text-sm">Flight API key</span>
-                              <Button variant="outline" size="sm">Update</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Update functionality coming soon')}>Update</Button>
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-sm">Email service</span>
-                              <Button variant="outline" size="sm">Configure</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Configure functionality coming soon')}>Configure</Button>
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="text-sm">SMS provider</span>
-                              <Button variant="outline" size="sm">Configure</Button>
+                              <Button variant="outline" size="sm" onClick={() => alert('Configure functionality coming soon')}>Configure</Button>
                             </div>
                           </CardContent>
                         </Card>

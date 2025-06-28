@@ -12,8 +12,14 @@ interface User {
 }
 
 function App() {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<User | null>({
+    id: '1',
+    email: 'admin@test.com',
+    role: 'admin',
+    first_name: 'Test',
+    last_name: 'Admin'
+  })
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token')

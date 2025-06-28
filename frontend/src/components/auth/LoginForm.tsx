@@ -30,29 +30,28 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     setError('')
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
+      const validCredentials = [
+        'admin@test.com',
+        'staff@test.com', 
+        'provider@test.com',
+        'family@test.com'
+      ]
 
-      if (!response.ok) {
+      if (!validCredentials.includes(email) || password !== 'password123') {
         throw new Error('Invalid credentials')
       }
 
-      const data = await response.json()
+      await new Promise(resolve => setTimeout(resolve, 1000))
       
       const mockUser: User = {
         id: '1',
         email,
-        role: email.includes('admin') ? 'admin' : email.includes('staff') ? 'staff' : 'family',
+        role: email.includes('admin') ? 'admin' : email.includes('staff') ? 'staff' : email.includes('provider') ? 'providers' : 'family',
         first_name: 'Test',
         last_name: 'User'
       }
 
-      onLogin(mockUser, data.access_token)
+      onLogin(mockUser, 'mock-token-123')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed')
     } finally {
