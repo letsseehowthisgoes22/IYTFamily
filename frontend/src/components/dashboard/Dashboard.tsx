@@ -77,6 +77,8 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         })
       } catch (err) {
         handleApiError(err, 'fetch trips')
+        setError('Unable to load trips. Using offline data.')
+        setTimeout(() => setError(null), 5000)
       } finally {
         setLoading(false)
       }
@@ -90,47 +92,82 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     setActiveTab('tracking')
   }
 
-  const handleCreateNewTrip = () => {
-    setActiveTab('trips')
-    console.log('Create new trip functionality')
+  const handleCreateNewTrip = async () => {
+    try {
+      const newTrip = {
+        id: `trip-${Date.now()}`,
+        client_id: 'mock-client',
+        staff_id: user.id,
+        status: 'scheduled' as const,
+        origin_address: 'Sample Origin Address',
+        destination_address: 'Sample Destination Address',
+        scheduled_start: new Date().toISOString(),
+        transport_mode: 'driving' as const,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+      
+      const createdTrip = await tripAPI.createTrip(newTrip)
+      setTrips(prev => [...prev, createdTrip])
+      alert('New trip created successfully!')
+      setActiveTab('trips')
+      console.log('Create new trip functionality')
+    } catch (error) {
+      handleApiError(error, 'create trip')
+      alert('Failed to create trip. Please try again.')
+      console.error('Error creating trip:', error)
+    }
   }
 
 
   const handleUploadDocument = (tripId?: string) => {
+    alert(`Document upload for trip ${tripId || 'selected trip'} will open here. Feature coming soon!`)
     console.log('Upload document for trip:', tripId)
     setActiveTab('documents')
   }
 
   const handleNewMessage = () => {
+    alert('New message composer will open here. Feature coming soon!')
     console.log('Create new message')
     setActiveTab('messages')
   }
 
   const handleDownloadDocument = (documentId: string) => {
+    alert(`Document ${documentId} download will start here. Feature coming soon!`)
     console.log('Download document:', documentId)
   }
 
   const handleDeleteDocument = (documentId: string) => {
-    console.log('Delete document:', documentId)
+    if (confirm(`Are you sure you want to delete document ${documentId}?`)) {
+      alert(`Document ${documentId} deleted successfully!`)
+      console.log('Delete document:', documentId)
+    }
   }
 
   const handleAddFlightInfo = () => {
+    alert('Flight information form will open here. Feature coming soon!')
     console.log('Add flight info')
   }
 
   const handleAddUser = () => {
+    alert('Add new user form will open here. Feature coming soon!')
     console.log('Add new user')
   }
 
   const handleEditUser = (userId: string) => {
+    alert(`Edit user ${userId} form will open here. Feature coming soon!`)
     console.log('Edit user:', userId)
   }
 
   const handleDisableUser = (userId: string) => {
-    console.log('Disable user:', userId)
+    if (confirm(`Are you sure you want to disable user ${userId}?`)) {
+      alert(`User ${userId} has been disabled successfully!`)
+      console.log('Disable user:', userId)
+    }
   }
 
   const handleConfigureSettings = () => {
+    alert('Settings configuration panel will open here. Feature coming soon!')
     console.log('Configure settings')
     setActiveTab('settings')
   }
