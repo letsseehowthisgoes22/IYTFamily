@@ -61,9 +61,10 @@ export function LoginForm({ onLogin }: LoginFormProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4 transport-gradient">
+      <Card className="w-full max-w-md transport-card">
         <CardHeader className="text-center">
+          <img src="/logo.jpg" alt="IYT Transport" className="h-12 w-auto mx-auto mb-4" />
           <CardTitle className="text-2xl font-bold">IYT Family Transport</CardTitle>
           <CardDescription>
             Sign in to access your dashboard
@@ -98,7 +99,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full transport-button-primary" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign In
             </Button>

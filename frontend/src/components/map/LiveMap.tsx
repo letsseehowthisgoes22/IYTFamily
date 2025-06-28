@@ -18,7 +18,7 @@ interface LiveMapProps {
 
 export function LiveMap({ tripId }: LiveMapProps) {
   const [position, setPosition] = useState<[number, number] | null>(null)
-  const [isTracking, setIsTracking] = useState(false)
+  const [isTracking, setIsTracking] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -29,6 +29,7 @@ export function LiveMap({ tripId }: LiveMapProps) {
     }
 
     setIsTracking(true)
+    localStorage.setItem('gps-tracking-enabled', 'true')
     setError(null)
 
     navigator.geolocation.getCurrentPosition(
@@ -68,6 +69,7 @@ export function LiveMap({ tripId }: LiveMapProps) {
 
   const stopTracking = () => {
     setIsTracking(false)
+    localStorage.setItem('gps-tracking-enabled', 'false')
     if (intervalRef.current) {
       clearInterval(intervalRef.current)
       intervalRef.current = null
@@ -97,6 +99,15 @@ export function LiveMap({ tripId }: LiveMapProps) {
   }
 
   useEffect(() => {
+    const savedTrackingState = localStorage.getItem('gps-tracking-enabled')
+    const shouldTrack = savedTrackingState !== 'false'
+    
+    if (shouldTrack) {
+      startTracking()
+    } else {
+      setIsTracking(false)
+    }
+    
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
@@ -109,15 +120,25 @@ export function LiveMap({ tripId }: LiveMapProps) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="font-medium">Live GPS Tracking</h3>
-          <p className="text-sm text-gray-600">Real-time location on map</p>
+          <p className="text-sm text-gray-600">
+            {isTracking ? 'GPS tracking is active - location updates every 10 seconds' : 'GPS tracking is disabled'}
+          </p>
         </div>
-        <Button
-          onClick={isTracking ? stopTracking : startTracking}
-          className={isTracking ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}
-        >
-          {isTracking ? <Square className="h-4 w-4 mr-2" /> : <MapPin className="h-4 w-4 mr-2" />}
-          {isTracking ? 'Stop Tracking' : 'Start Tracking'}
-        </Button>
+        <div className="flex items-center space-x-3">
+          {isTracking && (
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-green-600 font-medium">Active</span>
+            </div>
+          )}
+          <Button
+            onClick={isTracking ? stopTracking : startTracking}
+            className={isTracking ? "bg-red-600 hover:bg-red-700" : "transport-button-success"}
+          >
+            {isTracking ? <Square className="h-4 w-4 mr-2" /> : <MapPin className="h-4 w-4 mr-2" />}
+            {isTracking ? 'Stop Tracking' : 'Start Tracking'}
+          </Button>
+        </div>
       </div>
 
       {error && (

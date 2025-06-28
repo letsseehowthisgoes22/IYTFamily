@@ -71,10 +71,11 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="transport-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
+              <img src="/logo.jpg" alt="IYT Transport" className="h-8 w-auto" />
               <h1 className="text-xl font-semibold text-gray-900">
                 IYT Family Transport
               </h1>
@@ -157,8 +158,58 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 <CardDescription>View and manage transport trips</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  Trip management interface coming soon...
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-medium">Active Trips</h3>
+                    {user.role === 'staff' && (
+                      <Button className="transport-button-primary">
+                        <MapPin className="h-4 w-4 mr-2" />
+                        Create New Trip
+                      </Button>
+                    )}
+                  </div>
+                  <div className="border rounded-lg">
+                    <div className="grid grid-cols-6 gap-4 p-4 bg-gray-50 font-medium text-sm">
+                      <div>Trip ID</div>
+                      <div>Client</div>
+                      <div>Status</div>
+                      <div>Departure</div>
+                      <div>Destination</div>
+                      <div>Actions</div>
+                    </div>
+                    <div className="divide-y">
+                      <div className="grid grid-cols-6 gap-4 p-4 items-center">
+                        <div className="font-mono text-sm">TRP-001</div>
+                        <div>John Smith</div>
+                        <div><Badge className="bg-green-100 text-green-800">In Progress</Badge></div>
+                        <div>Dallas, TX</div>
+                        <div>Phoenix, AZ</div>
+                        <div>
+                          <Button variant="outline" size="sm">View Details</Button>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-6 gap-4 p-4 items-center">
+                        <div className="font-mono text-sm">TRP-002</div>
+                        <div>Sarah Johnson</div>
+                        <div><Badge className="bg-blue-100 text-blue-800">Scheduled</Badge></div>
+                        <div>Houston, TX</div>
+                        <div>Denver, CO</div>
+                        <div>
+                          <Button variant="outline" size="sm">View Details</Button>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-6 gap-4 p-4 items-center">
+                        <div className="font-mono text-sm">TRP-003</div>
+                        <div>Mike Davis</div>
+                        <div><Badge className="bg-gray-100 text-gray-800">Completed</Badge></div>
+                        <div>Austin, TX</div>
+                        <div>Seattle, WA</div>
+                        <div>
+                          <Button variant="outline" size="sm">View Details</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -195,8 +246,55 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 <CardDescription>Communicate with authorized parties</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  Messaging interface coming soon...
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-medium">Recent Messages</h3>
+                    <Button className="transport-button-primary">
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      New Message
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="border rounded-lg p-4 hover:bg-gray-50">
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="font-medium">Trip TRP-001 Update</div>
+                        <div className="text-sm text-gray-500">2 hours ago</div>
+                      </div>
+                      <div className="text-sm text-gray-600 mb-2">
+                        Client pickup completed successfully. Currently en route to destination.
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-sm text-gray-500">From: Transport Staff</div>
+                        <Button variant="outline" size="sm">Reply</Button>
+                      </div>
+                    </div>
+                    <div className="border rounded-lg p-4 hover:bg-gray-50">
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="font-medium">Schedule Confirmation</div>
+                        <div className="text-sm text-gray-500">1 day ago</div>
+                      </div>
+                      <div className="text-sm text-gray-600 mb-2">
+                        Trip TRP-002 scheduled for tomorrow at 9:00 AM. Please confirm client availability.
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-sm text-gray-500">From: Family Member</div>
+                        <Button variant="outline" size="sm">Reply</Button>
+                      </div>
+                    </div>
+                    <div className="border rounded-lg p-4 hover:bg-gray-50">
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="font-medium">Document Request</div>
+                        <div className="text-sm text-gray-500">2 days ago</div>
+                      </div>
+                      <div className="text-sm text-gray-600 mb-2">
+                        Please upload the medical clearance form for upcoming transport.
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="text-sm text-gray-500">From: Admin</div>
+                        <Button variant="outline" size="sm">Reply</Button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -209,8 +307,63 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 <CardDescription>Upload and manage trip documents</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  Document management interface coming soon...
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-medium">Trip Documents</h3>
+                    {(user.role === 'staff' || user.role === 'admin') && (
+                      <Button className="transport-button-primary">
+                        <FileText className="h-4 w-4 mr-2" />
+                        Upload Document
+                      </Button>
+                    )}
+                  </div>
+                  <div className="border rounded-lg">
+                    <div className="grid grid-cols-5 gap-4 p-4 bg-gray-50 font-medium text-sm">
+                      <div>Document Name</div>
+                      <div>Type</div>
+                      <div>Trip ID</div>
+                      <div>Uploaded</div>
+                      <div>Actions</div>
+                    </div>
+                    <div className="divide-y">
+                      <div className="grid grid-cols-5 gap-4 p-4 items-center">
+                        <div>Medical Clearance Form</div>
+                        <div><Badge variant="outline">Medical</Badge></div>
+                        <div className="font-mono text-sm">TRP-001</div>
+                        <div className="text-sm text-gray-500">2 days ago</div>
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm">Download</Button>
+                          {(user.role === 'staff' || user.role === 'admin') && (
+                            <Button variant="outline" size="sm">Delete</Button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5 gap-4 p-4 items-center">
+                        <div>Consent Form</div>
+                        <div><Badge variant="outline">Legal</Badge></div>
+                        <div className="font-mono text-sm">TRP-002</div>
+                        <div className="text-sm text-gray-500">1 day ago</div>
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm">Download</Button>
+                          {(user.role === 'staff' || user.role === 'admin') && (
+                            <Button variant="outline" size="sm">Delete</Button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-5 gap-4 p-4 items-center">
+                        <div>Travel Itinerary</div>
+                        <div><Badge variant="outline">Travel</Badge></div>
+                        <div className="font-mono text-sm">TRP-001</div>
+                        <div className="text-sm text-gray-500">3 days ago</div>
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm">Download</Button>
+                          {(user.role === 'staff' || user.role === 'admin') && (
+                            <Button variant="outline" size="sm">Delete</Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -223,8 +376,78 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                 <CardDescription>Track flight status and updates</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-8 text-gray-500">
-                  Flight tracking interface coming soon...
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-medium">Flight Status</h3>
+                    {user.role === 'staff' && (
+                      <Button className="transport-button-primary">
+                        <Plane className="h-4 w-4 mr-2" />
+                        Add Flight Info
+                      </Button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">AA 1234</CardTitle>
+                        <CardDescription>American Airlines</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Status:</span>
+                            <Badge className="bg-green-100 text-green-800">On Time</Badge>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Departure:</span>
+                            <span className="text-sm">DFW - 2:30 PM</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Arrival:</span>
+                            <span className="text-sm">PHX - 4:15 PM</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Gate:</span>
+                            <span className="text-sm">A12</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Trip:</span>
+                            <span className="text-sm font-mono">TRP-001</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-lg">UA 5678</CardTitle>
+                        <CardDescription>United Airlines</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Status:</span>
+                            <Badge className="bg-yellow-100 text-yellow-800">Delayed</Badge>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Departure:</span>
+                            <span className="text-sm">IAH - 10:45 AM</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Arrival:</span>
+                            <span className="text-sm">DEN - 12:30 PM</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Gate:</span>
+                            <span className="text-sm">B7</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Trip:</span>
+                            <span className="text-sm font-mono">TRP-002</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -239,8 +462,65 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                     <CardDescription>Manage system users and permissions</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-8 text-gray-500">
-                      User management interface coming soon...
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-medium">System Users</h3>
+                        <Button className="transport-button-primary">
+                          <Users className="h-4 w-4 mr-2" />
+                          Add User
+                        </Button>
+                      </div>
+                      <div className="border rounded-lg">
+                        <div className="grid grid-cols-5 gap-4 p-4 bg-gray-50 font-medium text-sm">
+                          <div>Name</div>
+                          <div>Email</div>
+                          <div>Role</div>
+                          <div>Status</div>
+                          <div>Actions</div>
+                        </div>
+                        <div className="divide-y">
+                          <div className="grid grid-cols-5 gap-4 p-4 items-center">
+                            <div>John Smith</div>
+                            <div>john.smith@iyt.com</div>
+                            <div><Badge className="bg-blue-100 text-blue-800">Staff</Badge></div>
+                            <div><Badge className="bg-green-100 text-green-800">Active</Badge></div>
+                            <div className="flex space-x-2">
+                              <Button variant="outline" size="sm">Edit</Button>
+                              <Button variant="outline" size="sm">Disable</Button>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-5 gap-4 p-4 items-center">
+                            <div>Sarah Johnson</div>
+                            <div>sarah.j@family.com</div>
+                            <div><Badge className="bg-green-100 text-green-800">Family</Badge></div>
+                            <div><Badge className="bg-green-100 text-green-800">Active</Badge></div>
+                            <div className="flex space-x-2">
+                              <Button variant="outline" size="sm">Edit</Button>
+                              <Button variant="outline" size="sm">Disable</Button>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-5 gap-4 p-4 items-center">
+                            <div>Dr. Mike Davis</div>
+                            <div>m.davis@provider.com</div>
+                            <div><Badge className="bg-purple-100 text-purple-800">Provider</Badge></div>
+                            <div><Badge className="bg-green-100 text-green-800">Active</Badge></div>
+                            <div className="flex space-x-2">
+                              <Button variant="outline" size="sm">Edit</Button>
+                              <Button variant="outline" size="sm">Disable</Button>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-5 gap-4 p-4 items-center">
+                            <div>Admin User</div>
+                            <div>admin@iyt.com</div>
+                            <div><Badge className="bg-red-100 text-red-800">Admin</Badge></div>
+                            <div><Badge className="bg-green-100 text-green-800">Active</Badge></div>
+                            <div className="flex space-x-2">
+                              <Button variant="outline" size="sm">Edit</Button>
+                              <Button variant="outline" size="sm" disabled>Disable</Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -253,8 +533,88 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                     <CardDescription>View system reports and analytics</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-8 text-gray-500">
-                      Reports interface coming soon...
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Total Trips</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-3xl font-bold">127</div>
+                            <div className="text-sm text-gray-600">This month</div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Success Rate</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-3xl font-bold">98.4%</div>
+                            <div className="text-sm text-gray-600">Completed successfully</div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Avg Duration</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="text-3xl font-bold">4.2h</div>
+                            <div className="text-sm text-gray-600">Per trip</div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>Recent Activity</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Trips completed today</span>
+                                <span className="font-medium">5</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Active staff members</span>
+                                <span className="font-medium">12</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Messages sent</span>
+                                <span className="font-medium">23</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Documents uploaded</span>
+                                <span className="font-medium">8</span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader>
+                            <CardTitle>System Health</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">GPS Tracking</span>
+                                <Badge className="bg-green-100 text-green-800">Online</Badge>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Flight API</span>
+                                <Badge className="bg-green-100 text-green-800">Connected</Badge>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Messaging</span>
+                                <Badge className="bg-green-100 text-green-800">Active</Badge>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm">Database</span>
+                                <Badge className="bg-green-100 text-green-800">Healthy</Badge>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -267,8 +627,85 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
                     <CardDescription>Configure system settings and preferences</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-center py-8 text-gray-500">
-                      Settings interface coming soon...
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Notification Settings</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Email notifications</span>
+                              <Button variant="outline" size="sm">Configure</Button>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">SMS alerts</span>
+                              <Button variant="outline" size="sm">Configure</Button>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Push notifications</span>
+                              <Button variant="outline" size="sm">Configure</Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Security Settings</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Password policy</span>
+                              <Button variant="outline" size="sm">Edit</Button>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Session timeout</span>
+                              <Button variant="outline" size="sm">Edit</Button>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Two-factor auth</span>
+                              <Button variant="outline" size="sm">Configure</Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">GPS & Tracking</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Update interval</span>
+                              <Button variant="outline" size="sm">10 seconds</Button>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Geofence alerts</span>
+                              <Button variant="outline" size="sm">Enabled</Button>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Location history</span>
+                              <Button variant="outline" size="sm">30 days</Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardHeader>
+                            <CardTitle className="text-lg">Integration Settings</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Flight API key</span>
+                              <Button variant="outline" size="sm">Update</Button>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Email service</span>
+                              <Button variant="outline" size="sm">Configure</Button>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">SMS provider</span>
+                              <Button variant="outline" size="sm">Configure</Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
