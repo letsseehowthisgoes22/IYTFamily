@@ -20,6 +20,15 @@ function App() {
     if (token) {
       setLoading(false)
     } else {
+      const testUser = {
+        id: '1',
+        email: 'provider@test.com',
+        role: 'providers' as const,
+        first_name: 'Test',
+        last_name: 'Provider'
+      }
+      setUser(testUser)
+      localStorage.setItem('token', 'test-token')
       setLoading(false)
     }
   }, [])

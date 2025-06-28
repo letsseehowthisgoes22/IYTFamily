@@ -26,6 +26,7 @@ export function LoginForm({ onLogin }: LoginFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('Form submitted with:', { email, password })
     setLoading(true)
     setError('')
 
@@ -77,7 +78,10 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  console.log('Email changed to:', e.target.value)
+                  setEmail(e.target.value)
+                }}
                 required
                 placeholder="Enter your email"
               />
@@ -88,7 +92,10 @@ export function LoginForm({ onLogin }: LoginFormProps) {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  console.log('Password changed to:', e.target.value)
+                  setPassword(e.target.value)
+                }}
                 required
                 placeholder="Enter your password"
               />
