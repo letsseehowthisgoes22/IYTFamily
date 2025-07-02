@@ -6,7 +6,7 @@ import { Badge } from '../ui/badge'
 import { Alert, AlertDescription } from '../ui/alert'
 import { LogOut, MapPin, Plane, MessageSquare, FileText, Users, Settings } from 'lucide-react'
 import { LiveMap } from '../map/LiveMap'
-import { tripAPI, Trip } from '../../services/api'
+import { tripAPI, documentAPI, messageAPI, locationAPI, userAPI, Trip } from '../../services/api'
 
 interface User {
   id: string
@@ -87,31 +87,60 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     fetchTrips()
   }, [user])
 
-  const handleViewTripDetails = (tripId: string) => {
+  const handleViewTripDetails = async (tripId: string) => {
     setSelectedTripId(tripId)
     setActiveTab('tracking')
+    
+    try {
+      const locationData = await locationAPI.getCurrentLocation(tripId)
+      console.log('Location data loaded for trip:', tripId, locationData)
+    } catch (error) {
+      console.warn('Could not load location data for trip:', tripId, error)
+      handleApiError(error, 'load location data')
+    }
   }
 
   const handleCreateNewTrip = async () => {
+    const clientId = prompt('Enter client ID:')
+    if (!clientId) return
+    
+    const originAddress = prompt('Enter origin address:')
+    if (!originAddress) return
+    
+    const destinationAddress = prompt('Enter destination address:')
+    if (!destinationAddress) return
+    
+    const scheduledStart = prompt('Enter scheduled start time (YYYY-MM-DD HH:MM):')
+    if (!scheduledStart) return
+    
+    const scheduledEnd = prompt('Enter scheduled end time (YYYY-MM-DD HH:MM):')
+    if (!scheduledEnd) return
+    
+    const transportMode = prompt('Enter transport mode (driving/flying):')
+    if (!transportMode || !['driving', 'flying'].includes(transportMode)) {
+      alert('Transport mode must be either "driving" or "flying"')
+      return
+    }
+    
+    const vehicleInfo = prompt('Enter vehicle info (optional):') || ''
+    const notes = prompt('Enter notes (optional):') || ''
+    
     try {
-      const newTrip = {
-        id: `trip-${Date.now()}`,
-        client_id: 'mock-client',
-        staff_id: user.id,
-        status: 'scheduled' as const,
-        origin_address: 'Sample Origin Address',
-        destination_address: 'Sample Destination Address',
-        scheduled_start: new Date().toISOString(),
-        transport_mode: 'driving' as const,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+      const tripData = {
+        client_id: clientId,
+        origin_address: originAddress,
+        destination_address: destinationAddress,
+        scheduled_start: new Date(scheduledStart).toISOString(),
+        scheduled_end: new Date(scheduledEnd).toISOString(),
+        transport_mode: transportMode as 'driving' | 'flying',
+        vehicle_info: vehicleInfo,
+        notes: notes
       }
       
-      const createdTrip = await tripAPI.createTrip(newTrip)
+      const createdTrip = await tripAPI.createTrip(tripData)
       setTrips(prev => [...prev, createdTrip])
       alert('New trip created successfully!')
       setActiveTab('trips')
-      console.log('Create new trip functionality')
     } catch (error) {
       handleApiError(error, 'create trip')
       alert('Failed to create trip. Please try again.')
@@ -120,16 +149,47 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   }
 
 
-  const handleUploadDocument = (tripId?: string) => {
-    alert(`Document upload for trip ${tripId || 'selected trip'} will open here. Feature coming soon!`)
-    console.log('Upload document for trip:', tripId)
-    setActiveTab('documents')
+  const handleUploadDocument = async (tripId?: string) => {
+    if (!tripId) {
+      alert('Please select a trip first')
+      return
+    }
+    
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (file) {
+        try {
+          await documentAPI.uploadDocument(tripId, file)
+          alert('Document uploaded successfully!')
+          setActiveTab('documents')
+        } catch (error) {
+          handleApiError(error, 'upload document')
+          alert('Failed to upload document. Please try again.')
+        }
+      }
+    }
+    fileInput.click()
   }
 
-  const handleNewMessage = () => {
-    alert('New message composer will open here. Feature coming soon!')
-    console.log('Create new message')
-    setActiveTab('messages')
+  const handleNewMessage = async () => {
+    const content = prompt('Enter your message:')
+    if (!content) return
+    
+    if (!selectedTripId) {
+      alert('Please select a trip first')
+      return
+    }
+    
+    try {
+      await messageAPI.sendMessage(selectedTripId, content)
+      alert('Message sent successfully!')
+      setActiveTab('messages')
+    } catch (error) {
+      handleApiError(error, 'send message')
+      alert('Failed to send message. Please try again.')
+    }
   }
 
   const handleDownloadDocument = (documentId: string) => {
@@ -149,26 +209,99 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     console.log('Add flight info')
   }
 
-  const handleAddUser = () => {
-    alert('Add new user form will open here. Feature coming soon!')
-    console.log('Add new user')
+  const handleAddUser = async () => {
+    const email = prompt('Enter user email:')
+    if (!email) return
+    
+    const firstName = prompt('Enter first name:')
+    if (!firstName) return
+    
+    const lastName = prompt('Enter last name:')
+    if (!lastName) return
+    
+    const role = prompt('Enter role (admin/staff/family/providers):')
+    if (!role || !['admin', 'staff', 'family', 'providers'].includes(role)) {
+      alert('Role must be one of: admin, staff, family, providers')
+      return
+    }
+    
+    const password = prompt('Enter temporary password:')
+    if (!password) return
+    
+    try {
+      const userData = {
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        role: role as 'admin' | 'staff' | 'family' | 'providers',
+        password
+      }
+      
+      await userAPI.createUser(userData)
+      alert('New user created successfully!')
+    } catch (error) {
+      handleApiError(error, 'create user')
+      alert('Failed to create user. Please try again.')
+    }
   }
 
-  const handleEditUser = (userId: string) => {
-    alert(`Edit user ${userId} form will open here. Feature coming soon!`)
-    console.log('Edit user:', userId)
+  const handleEditUser = async (userId: string) => {
+    const email = prompt('Enter new email (or press cancel to keep current):')
+    const firstName = prompt('Enter new first name (or press cancel to keep current):')
+    const lastName = prompt('Enter new last name (or press cancel to keep current):')
+    const role = prompt('Enter new role (admin/staff/family/providers, or press cancel to keep current):')
+    
+    if (role && !['admin', 'staff', 'family', 'providers'].includes(role)) {
+      alert('Role must be one of: admin, staff, family, providers')
+      return
+    }
+    
+    try {
+      const userData: any = {}
+      if (email) userData.email = email
+      if (firstName) userData.first_name = firstName
+      if (lastName) userData.last_name = lastName
+      if (role) userData.role = role as 'admin' | 'staff' | 'family' | 'providers'
+      
+      if (Object.keys(userData).length === 0) {
+        alert('No changes made')
+        return
+      }
+      
+      await userAPI.updateUser(userId, userData)
+      alert('User updated successfully!')
+    } catch (error) {
+      handleApiError(error, 'update user')
+      alert('Failed to update user. Please try again.')
+    }
   }
 
-  const handleDisableUser = (userId: string) => {
+  const handleDisableUser = async (userId: string) => {
     if (confirm(`Are you sure you want to disable user ${userId}?`)) {
-      alert(`User ${userId} has been disabled successfully!`)
-      console.log('Disable user:', userId)
+      try {
+        await userAPI.disableUser(userId)
+        alert('User disabled successfully!')
+      } catch (error) {
+        handleApiError(error, 'disable user')
+        alert('Failed to disable user. Please try again.')
+      }
     }
   }
 
   const handleConfigureSettings = () => {
-    alert('Settings configuration panel will open here. Feature coming soon!')
-    console.log('Configure settings')
+    const updateInterval = prompt('Enter GPS update interval (seconds):')
+    if (updateInterval && !isNaN(Number(updateInterval))) {
+      localStorage.setItem('gpsUpdateInterval', updateInterval)
+      alert(`GPS update interval set to ${updateInterval} seconds`)
+    }
+    
+    const notificationPrefs = confirm('Enable push notifications?')
+    localStorage.setItem('notificationsEnabled', notificationPrefs.toString())
+    
+    const autoRefresh = confirm('Enable auto-refresh for trip data?')
+    localStorage.setItem('autoRefreshEnabled', autoRefresh.toString())
+    
+    alert('Settings updated successfully!')
     setActiveTab('settings')
   }
 
