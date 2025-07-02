@@ -345,6 +345,115 @@ export const flightAPI = {
   }
 };
 
+export interface Client {
+  id: string;
+  first_name: string;
+  last_name: string;
+  date_of_birth?: string;
+  emergency_contact_name?: string;
+  emergency_contact_phone?: string;
+  medical_notes?: string;
+  family_user_id?: string;
+  created_at: string;
+  updated_at: string;
+  family_user?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    role: string;
+  };
+}
+
+export interface ClientCreate {
+  first_name: string;
+  last_name: string;
+  date_of_birth?: string;
+  emergency_contact_name?: string;
+  emergency_contact_phone?: string;
+  medical_notes?: string;
+  family_user_id?: string;
+}
+
+export const clientAPI = {
+  getClients: async (): Promise<Client[]> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/clients/`, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch clients: ${response.statusText}`);
+    }
+    return response.json();
+  },
+
+  getClient: async (clientId: string): Promise<Client> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/clients/${clientId}`, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch client: ${response.statusText}`);
+    }
+    return response.json();
+  },
+
+  createClient: async (clientData: ClientCreate): Promise<Client> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/clients/`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(clientData)
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to create client: ${response.statusText}`);
+    }
+    return response.json();
+  },
+
+  updateClient: async (clientId: string, clientData: Partial<ClientCreate>): Promise<Client> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/clients/${clientId}`, {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(clientData)
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to update client: ${response.statusText}`);
+    }
+    return response.json();
+  },
+
+  assignClientToFamily: async (clientId: string, familyUserId: string): Promise<{ message: string; client: Client }> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/clients/${clientId}/assign-family`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ family_user_id: familyUserId })
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to assign client: ${response.statusText}`);
+    }
+    return response.json();
+  },
+
+  unassignClientFromFamily: async (clientId: string): Promise<{ message: string; client: Client }> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/clients/${clientId}/unassign-family`, {
+      method: 'POST',
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to unassign client: ${response.statusText}`);
+    }
+    return response.json();
+  },
+
+  getUnassignedClients: async (): Promise<Client[]> => {
+    const response = await fetch(`${API_BASE_URL}/api/v1/clients/unassigned/list`, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch unassigned clients: ${response.statusText}`);
+    }
+    return response.json();
+  }
+};
+
 export const handleApiError = (error: any, action: string) => {
   console.error(`Failed to ${action}:`, error);
   

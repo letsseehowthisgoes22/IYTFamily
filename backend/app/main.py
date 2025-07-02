@@ -10,7 +10,8 @@ from .api import (
     flights_router,
     messages_router,
     documents_router,
-    notifications_router
+    notifications_router,
+    clients_router
 )
 
 app = FastAPI(
@@ -38,6 +39,7 @@ app.include_router(flights_router, prefix="/api/v1")
 app.include_router(messages_router, prefix="/api/v1")
 app.include_router(documents_router, prefix="/api/v1")
 app.include_router(notifications_router, prefix="/api/v1")
+app.include_router(clients_router, prefix="/api/v1")
 
 @app.get("/healthz")
 async def healthz():

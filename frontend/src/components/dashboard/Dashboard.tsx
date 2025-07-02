@@ -6,7 +6,14 @@ import { Badge } from '../ui/badge'
 import { Alert, AlertDescription } from '../ui/alert'
 import { LogOut, MapPin, Plane, MessageSquare, FileText, Users, Settings } from 'lucide-react'
 import { LiveMap } from '../map/LiveMap'
-import { tripAPI, documentAPI, messageAPI, locationAPI, userAPI, Trip } from '../../services/api'
+import { tripAPI, locationAPI, userAPI, Trip } from '../../services/api'
+import { TripCreationPage } from '../pages/TripCreationPage'
+import { SettingsPage } from '../pages/SettingsPage'
+import { UserManagementPage } from '../pages/UserManagementPage'
+import { FlightManagementPage } from '../pages/FlightManagementPage'
+import { DocumentUploadPage } from '../pages/DocumentUploadPage'
+import { MessagingPage } from '../pages/MessagingPage'
+import { ClientManagementPage } from '../pages/ClientManagementPage'
 
 interface User {
   id: string
@@ -23,6 +30,8 @@ interface DashboardProps {
 
 export function Dashboard({ user, onLogout }: DashboardProps) {
   const [activeTab, setActiveTab] = useState('overview')
+  const [currentPage, setCurrentPage] = useState<string | null>(null)
+  const [pageParams, setPageParams] = useState<Record<string, any>>({})
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedTripId, setSelectedTripId] = useState<string | null>(null)
@@ -100,96 +109,17 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
     }
   }
 
-  const handleCreateNewTrip = async () => {
-    const clientId = prompt('Enter client ID:')
-    if (!clientId) return
-    
-    const originAddress = prompt('Enter origin address:')
-    if (!originAddress) return
-    
-    const destinationAddress = prompt('Enter destination address:')
-    if (!destinationAddress) return
-    
-    const scheduledStart = prompt('Enter scheduled start time (YYYY-MM-DD HH:MM):')
-    if (!scheduledStart) return
-    
-    const scheduledEnd = prompt('Enter scheduled end time (YYYY-MM-DD HH:MM):')
-    if (!scheduledEnd) return
-    
-    const transportMode = prompt('Enter transport mode (driving/flying):')
-    if (!transportMode || !['driving', 'flying'].includes(transportMode)) {
-      alert('Transport mode must be either "driving" or "flying"')
-      return
-    }
-    
-    const vehicleInfo = prompt('Enter vehicle info (optional):') || ''
-    const notes = prompt('Enter notes (optional):') || ''
-    
-    try {
-      const tripData = {
-        client_id: clientId,
-        origin_address: originAddress,
-        destination_address: destinationAddress,
-        scheduled_start: new Date(scheduledStart).toISOString(),
-        scheduled_end: new Date(scheduledEnd).toISOString(),
-        transport_mode: transportMode as 'driving' | 'flying',
-        vehicle_info: vehicleInfo,
-        notes: notes
-      }
-      
-      const createdTrip = await tripAPI.createTrip(tripData)
-      setTrips(prev => [...prev, createdTrip])
-      alert('New trip created successfully!')
-      setActiveTab('trips')
-    } catch (error) {
-      handleApiError(error, 'create trip')
-      alert('Failed to create trip. Please try again.')
-      console.error('Error creating trip:', error)
-    }
+  const handleCreateNewTrip = () => {
+    navigateToPage('tripCreation')
   }
 
 
-  const handleUploadDocument = async (tripId?: string) => {
-    if (!tripId) {
-      alert('Please select a trip first')
-      return
-    }
-    
-    const fileInput = document.createElement('input')
-    fileInput.type = 'file'
-    fileInput.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0]
-      if (file) {
-        try {
-          await documentAPI.uploadDocument(tripId, file)
-          alert('Document uploaded successfully!')
-          setActiveTab('documents')
-        } catch (error) {
-          handleApiError(error, 'upload document')
-          alert('Failed to upload document. Please try again.')
-        }
-      }
-    }
-    fileInput.click()
+  const handleUploadDocument = (tripId?: string) => {
+    navigateToPage('documentUpload', { tripId })
   }
 
-  const handleNewMessage = async () => {
-    const content = prompt('Enter your message:')
-    if (!content) return
-    
-    if (!selectedTripId) {
-      alert('Please select a trip first')
-      return
-    }
-    
-    try {
-      await messageAPI.sendMessage(selectedTripId, content)
-      alert('Message sent successfully!')
-      setActiveTab('messages')
-    } catch (error) {
-      handleApiError(error, 'send message')
-      alert('Failed to send message. Please try again.')
-    }
+  const handleNewMessage = () => {
+    navigateToPage('messaging', { tripId: selectedTripId })
   }
 
   const handleDownloadDocument = (documentId: string) => {
@@ -205,75 +135,15 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   }
 
   const handleAddFlightInfo = () => {
-    alert('Flight information form will open here. Feature coming soon!')
-    console.log('Add flight info')
+    navigateToPage('flightManagement', { tripId: selectedTripId })
   }
 
-  const handleAddUser = async () => {
-    const email = prompt('Enter user email:')
-    if (!email) return
-    
-    const firstName = prompt('Enter first name:')
-    if (!firstName) return
-    
-    const lastName = prompt('Enter last name:')
-    if (!lastName) return
-    
-    const role = prompt('Enter role (admin/staff/family/providers):')
-    if (!role || !['admin', 'staff', 'family', 'providers'].includes(role)) {
-      alert('Role must be one of: admin, staff, family, providers')
-      return
-    }
-    
-    const password = prompt('Enter temporary password:')
-    if (!password) return
-    
-    try {
-      const userData = {
-        email,
-        first_name: firstName,
-        last_name: lastName,
-        role: role as 'admin' | 'staff' | 'family' | 'providers',
-        password
-      }
-      
-      await userAPI.createUser(userData)
-      alert('New user created successfully!')
-    } catch (error) {
-      handleApiError(error, 'create user')
-      alert('Failed to create user. Please try again.')
-    }
+  const handleAddUser = () => {
+    navigateToPage('userManagement')
   }
 
-  const handleEditUser = async (userId: string) => {
-    const email = prompt('Enter new email (or press cancel to keep current):')
-    const firstName = prompt('Enter new first name (or press cancel to keep current):')
-    const lastName = prompt('Enter new last name (or press cancel to keep current):')
-    const role = prompt('Enter new role (admin/staff/family/providers, or press cancel to keep current):')
-    
-    if (role && !['admin', 'staff', 'family', 'providers'].includes(role)) {
-      alert('Role must be one of: admin, staff, family, providers')
-      return
-    }
-    
-    try {
-      const userData: any = {}
-      if (email) userData.email = email
-      if (firstName) userData.first_name = firstName
-      if (lastName) userData.last_name = lastName
-      if (role) userData.role = role as 'admin' | 'staff' | 'family' | 'providers'
-      
-      if (Object.keys(userData).length === 0) {
-        alert('No changes made')
-        return
-      }
-      
-      await userAPI.updateUser(userId, userData)
-      alert('User updated successfully!')
-    } catch (error) {
-      handleApiError(error, 'update user')
-      alert('Failed to update user. Please try again.')
-    }
+  const handleEditUser = (userId: string) => {
+    navigateToPage('userManagement', { userId, mode: 'edit' })
   }
 
   const handleDisableUser = async (userId: string) => {
@@ -289,20 +159,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   }
 
   const handleConfigureSettings = () => {
-    const updateInterval = prompt('Enter GPS update interval (seconds):')
-    if (updateInterval && !isNaN(Number(updateInterval))) {
-      localStorage.setItem('gpsUpdateInterval', updateInterval)
-      alert(`GPS update interval set to ${updateInterval} seconds`)
-    }
-    
-    const notificationPrefs = confirm('Enable push notifications?')
-    localStorage.setItem('notificationsEnabled', notificationPrefs.toString())
-    
-    const autoRefresh = confirm('Enable auto-refresh for trip data?')
-    localStorage.setItem('autoRefreshEnabled', autoRefresh.toString())
-    
-    alert('Settings updated successfully!')
-    setActiveTab('settings')
+    navigateToPage('settings')
   }
 
   const getTabsForRole = (role: string) => {
@@ -317,6 +174,7 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
         return [
           ...commonTabs,
           { id: 'users', label: 'Users', icon: Users },
+          { id: 'clients', label: 'Client Management', icon: Users },
           { id: 'reports', label: 'Reports', icon: FileText },
           { id: 'settings', label: 'Settings', icon: Settings },
         ]
@@ -340,6 +198,49 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
   }
 
   const tabs = getTabsForRole(user.role)
+
+  const navigateToPage = (page: string, params: Record<string, any> = {}) => {
+    setCurrentPage(page)
+    setPageParams(params)
+  }
+
+  const returnToDashboard = () => {
+    setCurrentPage(null)
+    setPageParams({})
+  }
+
+  const handleTripCreated = (trip: any) => {
+    setTrips(prev => [...prev, trip])
+    returnToDashboard()
+  }
+
+  if (currentPage === 'tripCreation') {
+    return <TripCreationPage onBack={returnToDashboard} onTripCreated={handleTripCreated} />
+  }
+
+  if (currentPage === 'settings') {
+    return <SettingsPage onBack={returnToDashboard} />
+  }
+
+  if (currentPage === 'userManagement') {
+    return <UserManagementPage onBack={returnToDashboard} />
+  }
+
+  if (currentPage === 'flightManagement') {
+    return <FlightManagementPage onBack={returnToDashboard} tripId={pageParams.tripId} />
+  }
+
+  if (currentPage === 'documentUpload') {
+    return <DocumentUploadPage onBack={returnToDashboard} tripId={pageParams.tripId} />
+  }
+
+  if (currentPage === 'messaging') {
+    return <MessagingPage onBack={returnToDashboard} tripId={pageParams.tripId} />
+  }
+
+  if (currentPage === 'client-management') {
+    return <ClientManagementPage onBack={returnToDashboard} />
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -759,6 +660,32 @@ export function Dashboard({ user, onLogout }: DashboardProps) {
 
           {user.role === 'admin' && (
             <>
+              <TabsContent value="clients" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Client Management</CardTitle>
+                    <CardDescription>Manage clients and their assignments</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-medium">Client Assignment</h3>
+                        <Button 
+                          className="transport-button-primary" 
+                          onClick={() => navigateToPage('client-management')}
+                        >
+                          <Users className="h-4 w-4 mr-2" />
+                          Manage Clients
+                        </Button>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        Assign clients to family and provider users to control access to trip information.
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
               <TabsContent value="users" className="space-y-6">
                 <Card>
                   <CardHeader>
